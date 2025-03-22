@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harshita's Love Puzzle</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2;
+        }
+        #game-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(2, 150px);
+            grid-template-rows: repeat(2, 150px);
+            gap: 5px;
+            margin: 20px auto;
+            width: 310px;
+        }
+        .puzzle-piece {
+            width: 150px;
+            height: 150px;
+            background-size: 300px 300px;
+            cursor: pointer;
+            border: 2px solid #ff4d94;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff4d94;
+            color: white;
+        }
+        button:hover {
+            background-color: #ff1a75;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h2>Harshita, Complete the Puzzle to See My Message! 💖</h2>
+        <div class="puzzle-container" id="puzzle"></div>
+        <button onclick="shufflePieces()">Shuffle</button>
+        <button onclick="checkPuzzle()">Check Answer</button>
+        <p id="result-text"></p>
+    </div>
+
+    <script>
+        let puzzleContainer = document.getElementById("puzzle");
+        let resultText = document.getElementById("result-text");
+        let imageSrc = "img/photo.jpg"; // Change to the actual image
+        let correctOrder = [...Array(4).keys()];
+        let shuffledOrder = [...correctOrder].sort(() => Math.random() - 0.2);
+        let winMessages = [
+            "💖 Harshita, you are my everything! 💖",
+            "💘 Harshita, I love you more than words can say! 💘",
+            "😍 Harshita, you make my world beautiful! 😍",
+            "💞 Every moment with you is special, Harshita! 💞",
+            "❤️ Harshita, you are my heart, my soul, my love! ❤️"
+        ];
+        let winCount = 0;
+
+        function createPuzzle() {
+            puzzleContainer.innerHTML = "";
+            shuffledOrder.forEach((pos, index) => {
+                let piece = document.createElement("div");
+                piece.classList.add("puzzle-piece");
+                piece.style.backgroundImage = `url('${imageSrc}')`;
+                piece.style.backgroundPosition = `-${(pos % 2) * 150}px -${Math.floor(pos / 2) * 150}px`;
+                piece.setAttribute("data-index", index);
+                piece.setAttribute("onclick", "swapPiece(" + index + ")");
+                puzzleContainer.appendChild(piece);
+            });
+        }
+
+        function swapPiece(index) {
+            if (index > 0) {
+                let temp = shuffledOrder[index];
+                shuffledOrder[index] = shuffledOrder[index - 1];
+                shuffledOrder[index - 1] = temp;
+                createPuzzle();
+            }
+        }
+
+        function shufflePieces() {
+            shuffledOrder.sort(() => Math.random() - 0.2);
+            createPuzzle();
+        }
+
+        function checkPuzzle() {
+            if (JSON.stringify(shuffledOrder) === JSON.stringify(correctOrder)) {
+                let message = winMessages[winCount % winMessages.length];
+                resultText.innerHTML = `🎉 Harshita, you solved the puzzle! <br> ${message}`;
+                winCount++;
+            } else {
+                resultText.innerText = "❌ Try again, Harshita!";
+            }
+        }
+
+        createPuzzle();
+    </script>
+</body>
+</html>
